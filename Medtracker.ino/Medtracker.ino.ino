@@ -117,9 +117,6 @@ void loop() {
   if(isPM == true) {
     nowHour = nowHour + 12;
   }
-  //Serial.println(nowHour);
-  //String currentTime = rtc.stringTime();
-  //Serial.println(currentTime);
 
   // Reset taken flags
   if(nowHour == 0 && rtc.getMinutes() == 0) {
@@ -140,9 +137,6 @@ void loop() {
     medTime = 0;
   }
 
-/*****
-    Set serials below to logs 
-*****/
   // If it is time to take meds and meds have not been taken light the appropriate button
   if(medTime == 1 && takenMorning == 0) {
     Serial.println("It's Morning Med time!");
@@ -167,13 +161,33 @@ void loop() {
         Serial.print("RTC read failed");
       }  
     }
+    else if (buttonPressChk() == 2) {
+      if(takenEvening == 0){
+        eveningButton.LEDon(brightnessOn);
+        delay(3000);
+        eveningButton.LEDoff();
+      }
+      else if(takenEvening == 1) {
+        eveningButton.LEDon(brightnessPress);
+        delay(1000);
+        eveningButton.LEDoff();
+        delay(500);
+        eveningButton.LEDon(brightnessPress);
+        delay(1000);
+        eveningButton.LEDoff();
+        delay(500);
+        eveningButton.LEDon(brightnessPress);
+        delay(1000);
+        eveningButton.LEDoff();
+      }
+    }
   }
   else if(medTime == 2 && takenEvening == 0) {
     Serial.println("It's Evening Med time!");
     morningButton.LEDoff();
     eveningButton.LEDon(brightnessOn);
     // If Evening button pressed log it and set takenEvening to 1
-    if(buttonPressChk() == 1){
+    if(buttonPressChk() == 2){
       takenEvening = 1;
       hourEvening = nowHour;
       if (rtc.updateTime() == true) //Updates the time variables from RTC 
@@ -187,9 +201,29 @@ void loop() {
         Serial.println(currentTime);
       }
       else
-      {
-        Serial.print("RTC read failed");
-      }  
+        {
+          Serial.print("RTC read failed");
+        }  
+    }
+    else if (buttonPressChk() == 1) {
+      if(takenMorning == 0){
+        morningButton.LEDon(brightnessOn);
+        delay(3000);
+        morningButton.LEDoff();
+      }
+      else if(takenMorning == 1) {
+        morningButton.LEDon(brightnessPress);
+        delay(1000);
+        morningButton.LEDoff();
+        delay(500);
+        morningButton.LEDon(brightnessPress);
+        delay(1000);
+        morningButton.LEDoff();
+        delay(500);
+        morningButton.LEDon(brightnessPress);
+        delay(1000);
+        morningButton.LEDoff();
+      }
     }
   }
   else {
